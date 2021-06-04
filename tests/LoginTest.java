@@ -36,12 +36,12 @@ public class LoginTest {
 		driver = new ChromeDriver();
 	}
 	
-	/*@AfterClass
+	@AfterClass
 	public void closeDriver() {
 		driver.close();
-	} */
+	} 
 	
-	@Test
+	@Test (priority=1)
 	public void inavlidDataTest() {
 		
 		File f = new File("Podaci.xlsx");
@@ -77,7 +77,7 @@ public class LoginTest {
 		}
 	}
 
-	@Test
+	@Test (priority=2)
 	public void validDataTest() {
 		
 		File f = new File("Podaci.xlsx");
@@ -112,26 +112,20 @@ public class LoginTest {
 		
 	} 
 	
-	@Test
+	@Test (priority=3)
 	public void sortiranjeTest() {
-		driver.get(Home.URL);
-		Home.inputUsername(driver,"standard_user");
-		Home.inputPassword(driver,"secret_sauce");
-		Home.loginBtn(driver);
 		driver.navigate().to(Sortiranje.URL_PRODUCTPAGE);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Sortiranje.dropboxBtn(driver);
+		
 		Sortiranje.lowToHighchoice(driver);
 		
-		List<WebElement> imgs = driver.findElements(By.className("inventory_item_img"));
+		List<WebElement> items = driver.findElements(By.className("inventory_item_name"));
 		
 		driver.manage().window().maximize();
 		
-		imgs.get(0);
+		String expectedResult = "Sauce Labs Onesie";
+		String actualResult = items.get(0).getText();
 		
-		String currentUrl = driver.getCurrentUrl();
-		String expectedUrl = "https://www.saucedemo.com/inventory.html";
-		
-		Assert.assertEquals(currentUrl, expectedUrl);
+		Assert.assertEquals(actualResult, expectedResult);
 	}
 }
